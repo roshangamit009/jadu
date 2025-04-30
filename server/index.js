@@ -551,6 +551,22 @@ app.get('/api/admin/orders', async (req, res) => {
     res.status(500).json({ message: 'Error fetching all orders', error: error.message });
   }
 });
+//get order by shop name
+app.get('/api/orders/shop', async (req, res) => {
+  const { shopName, shopId } = req.query;
+
+  if (!shopName || !shopId) {
+    return res.status(400).json({ message: 'Shop Name and Shop ID are required' });
+  }
+
+  try {
+    const orders = await Order.find({ shopName, shopId }); // Fetch orders by shopName and shopId
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ message: 'Error fetching orders', error: error.message });
+  }
+});
 
 // Update product stock when an order is placed
 app.put('/api/products/update-stock', async (req, res) => {
